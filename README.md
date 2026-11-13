@@ -64,8 +64,6 @@ As an example, here's how `ToktokTokenizer` performs on last example sentence:
 > # Natural Language processing tools
 > import nltk
 > from nltk.tokenize.toktok import ToktokTokenizer
-> # Data structure for easy counting
-> from collections import Counter
 > 
 > giml = "He said 'don't don that t-shirt' to Don---who was doing dishes."
 > 
@@ -83,15 +81,7 @@ As an example, here's how `ToktokTokenizer` performs on last example sentence:
 > ```
 Now with `TreebankWordTokenizer`:
 > ```python
-> # Natural Language processing tools
-> import nltk
 > from nltk.tokenize.treebank import TreebankWordTokenizer
-> # Data structure for easy counting
-> from collections import Counter
-> 
-> giml = "He said 'don't don that t-shirt' to Don---who was doing dishes."
-> 
-> lower_giml = giml.lower()
 > 
 > tokenizer = TreebankWordTokenizer()
 > tokenized = tokenizer.tokenize(lower_giml)
@@ -107,6 +97,7 @@ Now with `TreebankWordTokenizer`:
 These give different results, but that's okay. 
 - Toktok does a better job at splitting up the punctuation, but `don't` splits into `don` & `t`.
 - Treebank adds `'` to the first half of `don't`, but it also splits `don't` into `do` and `n't`, which maintains parts of the contraction as separate tokens.
+
 There isn't a known solution to tokenizing the English language right now, so it's important to consider the strengths and weaknesses of your tokenization model.
 
 ## What is Stemming?
@@ -123,7 +114,7 @@ Many related words have similar looks. In English, the words *computes*, *comput
 Think about how dictionaries work
 > ![image](/images/dictionary.png)
 > 
-> *This dictionary has an entry for the word **muscle**, but no separate entries for **muscle<ins>s</ins>**, **muscle<ins>d</ins>**, or **muscl<ins>ing</ins>**.*
+> *This dictionary has an entry for the noun and verb **muscle**, but no separate entries for the verbs **muscle<ins>s</ins>**, **muscle<ins>d</ins>**, or **muscl<ins>ing</ins>**.*
 
 
 
