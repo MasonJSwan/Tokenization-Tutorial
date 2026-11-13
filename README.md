@@ -19,10 +19,29 @@ Unfortunately, this simple approach does not work in more complicated examples
 >>> bet = """Yes or no isn’t null; yes it is; no, I don't know    
 Yes or no? Isn't it a silly question? Ask it anyway, 'cause""".split(" ")
 >>> bet
-['Yes', 'or', 'no', 'isn’t', 'null;', 'yes', 'it', 'is;', 'no,', 'I', "don't", 'know\nYes', 'or', 'no?', "Isn't", 'it', 'a', 'silly', 'question?', 'Ask', 'it', 'anyway,', "'cause"]
+['Yes', 'or', 'no', 'isn’t', 'null;', 'yes', 'it', 'is;', 'no,', 'I', "don't", 
+ 'know\nYes', 'or', 'no?', "Isn't", 'it', 'a', 'silly', 'question?', 'Ask',
+ 'it', 'anyway,', "'cause"]
 >>> Counter(bet)
-Counter({'it': 3, 'or': 2, 'Yes': 1, 'no': 1, 'isn’t': 1, 'null;': 1, 'yes': 1, 'is;': 1, 'no,': 1, 'I': 1, "don't": 1, 'know\nYes': 1, 'no?': 1, "Isn't": 1, 'a': 1, 'silly': 1, 'question?': 1, 'Ask': 1, 'anyway,': 1, "'cause": 1})
+Counter({'it': 3, 'or': 2, 'Yes': 1, 'no': 1, 'isn’t': 1, 'null;': 1, 'yes': 1,
+         'is;': 1, 'no,': 1, 'I': 1, "don't": 1, 'know\nYes': 1, 'no?': 1, 
+         "Isn't": 1, 'a': 1, 'silly': 1, 'question?': 1, 'Ask': 1, 
+         'anyway,': 1, "'cause": 1})
 ```
+The counter is differentiating between `Yes` and `yes`, and it's not separating `know` and `yes` in `know\nYes`. It's also creating different counts for `no`, `no,` and `no?`.
+
+We can force the text to be all uppercase or lowercase, and we could add more separators, but this quickly becomes complicated. 
+
+> ### How?
+> Typically, an apostrophe character is used in computer text as either a single quote or an apostrophe. Take this example sentence:
+>
+>  > He said 'don't don that t-shirt' to Don-who was doing dishes.
+> 1. If we normalized capitalization, we would be unable to differentiate between don (to put on) and Don (nickname for Donovan).
+>    - This can sometimes be ignored, but it can be a problem in languages like Turkish where the capital form of i is İ, and the lowercase form of I is ı. Kir means "dirt" but Kır means "countryside".
+> 2. If we added punctuation to the list of separators, we wouldn't have to worry about the single quotes merging into the words `don't` or `t-shirt` or the hypen merging `Don-who`, but we'd end up splitting `don't` into `don` and `t`, and `t-shirt` into `t` and `shirt`.
+
+Thankfully, computational linguists have created tools for assisting with these problems. 
+
 
 ## What is Stemming?
 > *My \*knowing\* of the Art as humans \*know\* it is limited. But I \*know\* enough. I will teach you its ways.*
