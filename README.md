@@ -12,26 +12,26 @@ alep
 ['the', 'boy', 'kicked', 'the', 'ball']
 ```
 This is effective for cases where all of your text is separated by spaces, with no other punctuation, and where capitalization matters. We can see the frequency of each word using some form of counter:
-```python
-from collections import Counter
-Counter(alep)
-```
-```python
-# output
-Counter({'the': 2, 'boy': 1, 'kicked': 1, 'ball': 1})
-```
+> ```python
+> from collections import Counter
+> Counter(alep)
+> ```
+> ```python
+> # output
+> Counter({'the': 2, 'boy': 1, 'kicked': 1, 'ball': 1})
+> ```
 Unfortunately, this simple approach does not work in more complicated examples
-```python
-bet = """Yes or no isn't null; yes it is; no, I don't know
-Yes or no? Isn't it a silly question? Ask it anyway, 'cause""".split(" ")
-bet
-```
-```python
-# output
-['Yes', 'or', 'no', "isn't", 'null;', 'yes', 'it', 'is;', 'no,', 'I', "don't",
- 'know\nYes', 'or', 'no?', "Isn't", 'it', 'a', 'silly', 'question?', 'Ask', 
- 'it', 'anyway,', "'cause"]
-```
+> ```python
+> bet = """Yes or no isn't null; yes it is; no, I don't know
+> Yes or no? Isn't it a silly question? Ask it anyway, 'cause""".split(" ")
+> bet
+> ```
+> ```python
+> # output
+> ['Yes', 'or', 'no', "isn't", 'null;', 'yes', 'it', 'is;', 'no,', 'I', "don't",
+>  'know\nYes', 'or', 'no?', "Isn't", 'it', 'a', 'silly', 'question?', 'Ask', 
+>  'it', 'anyway,', "'cause"]
+> ```
 
 
 ```python
