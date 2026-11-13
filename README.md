@@ -107,6 +107,7 @@ Many related words have similar looks. In English, the words *computes*, *comput
 
 Think about how dictionaries work
 > ![image](/images/dictionary.png)
+> 
 > *This dictionary has an entry for the word **muscle**, but no separate entries for **muscle<ins>s</ins>**, **muscle<ins>d</ins>**, or **muscl<ins>ing</ins>**.*
 
 
