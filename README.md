@@ -16,32 +16,80 @@ Counter({'the': 2, 'boy': 1, 'kicked': 1, 'ball': 1})
 ```
 Unfortunately, this simple approach does not work in more complicated examples
 ```python
->>> bet = """Yes or no isn’t null; yes it is; no, I don't know    
-Yes or no? Isn't it a silly question? Ask it anyway, 'cause""".split(" ")
+>>> bet = """Yes or no isn't null; yes it is; no, I don't know
+... Yes or no? Isn't it a silly question? Ask it anyway, 'cause""".split(" ")
 >>> bet
-['Yes', 'or', 'no', 'isn’t', 'null;', 'yes', 'it', 'is;', 'no,', 'I', "don't", 
- 'know\nYes', 'or', 'no?', "Isn't", 'it', 'a', 'silly', 'question?', 'Ask',
+['Yes', 'or', 'no', "isn't", 'null;', 'yes', 'it', 'is;', 'no,', 'I', "don't",
+ 'know\nYes', 'or', 'no?', "Isn't", 'it', 'a', 'silly', 'question?', 'Ask', 
  'it', 'anyway,', "'cause"]
 >>> Counter(bet)
-Counter({'it': 3, 'or': 2, 'Yes': 1, 'no': 1, 'isn’t': 1, 'null;': 1, 'yes': 1,
-         'is;': 1, 'no,': 1, 'I': 1, "don't": 1, 'know\nYes': 1, 'no?': 1, 
-         "Isn't": 1, 'a': 1, 'silly': 1, 'question?': 1, 'Ask': 1, 
+Counter({'it': 3, 'or': 2, 'Yes': 1, 'no': 1, "isn't": 1, 'null;': 1, 'yes': 1,
+         'is;': 1, 'no,': 1, 'I': 1, "don't": 1, 'know\nYes': 1, 'no?': 1,
+         "Isn't": 1, 'a': 1, 'silly': 1, 'question?': 1, 'Ask': 1,
          'anyway,': 1, "'cause": 1})
 ```
 The counter is differentiating between `Yes` and `yes`, and it's not separating `know` and `yes` in `know\nYes`. It's also creating different counts for `no`, `no,` and `no?`.
 
 We can force the text to be all uppercase or lowercase, and we could add more separators, but this quickly becomes complicated. 
 
-> ### How?
-> Typically, an apostrophe character is used in computer text as either a single quote or an apostrophe. Take this example sentence:
->
->  > He said 'don't don that t-shirt' to Don-who was doing dishes.
-> 1. If we normalized capitalization, we would be unable to differentiate between don (to put on) and Don (nickname for Donovan).
->    - This can sometimes be ignored, but it can be a problem in languages like Turkish where the capital form of i is İ, and the lowercase form of I is ı. Kir means "dirt" but Kır means "countryside".
-> 2. If we added punctuation to the list of separators, we wouldn't have to worry about the single quotes merging into the words `don't` or `t-shirt` or the hypen merging `Don-who`, but we'd end up splitting `don't` into `don` and `t`, and `t-shirt` into `t` and `shirt`.
+### How?
+Typically, an apostrophe character is used in computer text as either a single quote or an apostrophe. Take this example sentence:
+> He said 'don't don that t-shirt' to Don---who was doing dishes.
+1. If we normalized capitalization, we would be unable to differentiate between don (to put on) and Don (nickname for Donovan).
+    - This can sometimes be ignored, but it can be a problem in languages like Turkish where the capital form of i is İ, and the lowercase form of I is ı. Kir means "dirt" but Kır means "countryside".
+2. If we added punctuation to the list of separators, we wouldn't have to worry about the single quotes merging into the words `don't` or `t-shirt` or the hypen merging `Don---who`.
+    - but we'd end up splitting `don't` into `don` & `t`; and `t-shirt` into `t` & `shirt`.
 
-Thankfully, computational linguists have created tools for assisting with these problems. 
+### Introducing: NLTK Tokenizers
+Thankfully, computational linguists have created tools for assisting with these problems. NLTK contains various tokenizers that follow different philosophies. 
 
+As an example, here's how `ToktokTokenizer` performs on last example sentence:
+```python
+# Natural Language processing tools
+import nltk
+from nltk.tokenize.toktok import ToktokTokenizer
+# Data structure for easy counting
+from collections import Counter
+
+giml = "He said 'don't don that t-shirt' to Don---who was doing dishes."
+
+lower_giml = giml.lower()
+
+tokenizer = ToktokTokenizer()
+tokenized = tokenizer.tokenize(lower_giml)
+
+tokenized
+```
+```python
+# output
+['he', 'said', "'", 'don', "'", 't', 'don', 'that', 't-shirt', "'", 'to',
+ 'don', '---', 'who', 'was', 'doing', 'dishes', '.']
+```
+Now with `TreebankWordTokenizer`:
+```python
+# output
+# Natural Language processing tools
+import nltk
+from nltk.tokenize.treebank import TreebankWordTokenizer
+# Data structure for easy counting
+from collections import Counter
+
+giml = "He said 'don't don that t-shirt' to Don---who was doing dishes."
+
+lower_giml = giml.lower()
+
+tokenizer = TreebankWordTokenizer()
+tokenized = tokenizer.tokenize(lower_giml)
+
+tokenized
+```
+```python
+# output
+['he', 'said', "'do", "n't", 'don', 'that', 't-shirt', "'", 'to', 'don', '--',
+ '-who', 'was', 'doing', 'dishes', '.']
+```
+
+These give different results, but that's okay. Toktok does a better job at splitting up the punctuation, but `don't` splits into `don` & `t`. Treebank adds `'` to the first half of `don't`, but it also splits `don't` into `do'` and `n't`, which maintains parts of the contraction as separate tokens.
 
 ## What is Stemming?
 > *My \*knowing\* of the Art as humans \*know\* it is limited. But I \*know\* enough. I will teach you its ways.*
