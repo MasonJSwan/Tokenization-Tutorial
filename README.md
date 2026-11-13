@@ -4,25 +4,41 @@
 ## What is Tokenization
 When reading natural language into a computer program, it immediately becomes necessary to identify the boundaries between words. The simple text—"the boy kicked the ball"—can be split into into "the" "boy" "kicked" "the" "ball" by choosing to use space as a delimiter.
 ```python
->>> alep = "the boy kicked the ball".split(" ")
->>> alep
+alep = "the boy kicked the ball".split(" ")
+alep
+```
+```python
+# output
 ['the', 'boy', 'kicked', 'the', 'ball']
 ```
 This is effective for cases where all of your text is separated by spaces, with no other punctuation, and where capitalization matters. We can see the frequency of each word using some form of counter:
 ```python
->>> from collections import Counter
->>> Counter(alep)
+from collections import Counter
+Counter(alep)
+```
+```python
+# output
 Counter({'the': 2, 'boy': 1, 'kicked': 1, 'ball': 1})
 ```
 Unfortunately, this simple approach does not work in more complicated examples
 ```python
->>> bet = """Yes or no isn't null; yes it is; no, I don't know
-... Yes or no? Isn't it a silly question? Ask it anyway, 'cause""".split(" ")
->>> bet
+bet = """Yes or no isn't null; yes it is; no, I don't know
+Yes or no? Isn't it a silly question? Ask it anyway, 'cause""".split(" ")
+bet
+```
+```python
+# output
 ['Yes', 'or', 'no', "isn't", 'null;', 'yes', 'it', 'is;', 'no,', 'I', "don't",
  'know\nYes', 'or', 'no?', "Isn't", 'it', 'a', 'silly', 'question?', 'Ask', 
  'it', 'anyway,', "'cause"]
->>> Counter(bet)
+```
+
+
+```python
+Counter(bet)
+```
+```python
+# output
 Counter({'it': 3, 'or': 2, 'Yes': 1, 'no': 1, "isn't": 1, 'null;': 1, 'yes': 1,
          'is;': 1, 'no,': 1, 'I': 1, "don't": 1, 'know\nYes': 1, 'no?': 1,
          "Isn't": 1, 'a': 1, 'silly': 1, 'question?': 1, 'Ask': 1,
@@ -32,7 +48,7 @@ The counter is differentiating between `Yes` and `yes`, and it's not separating 
 
 We can force the text to be all uppercase or lowercase, and we could add more separators, but this quickly becomes complicated. 
 
-### Complications with Splitting Text?
+### Complications With Splitting Text
 Typically, an apostrophe character is used in computer text as either a single quote or an apostrophe. Take this example sentence:
 > He said 'don't don that t-shirt' to Don---who was doing dishes.
 1. If we normalized capitalization, we would be unable to differentiate between don (to put on) and Don (nickname for Donovan).
@@ -91,7 +107,7 @@ tokenized
 
 These give different results, but that's okay. 
 - Toktok does a better job at splitting up the punctuation, but `don't` splits into `don` & `t`.
-- Treebank adds `'` to the first half of `don't`, but it also splits `don't` into `do'` and `n't`, which maintains parts of the contraction as separate tokens.
+- Treebank adds `'` to the first half of `don't`, but it also splits `don't` into `do` and `n't`, which maintains parts of the contraction as separate tokens.
 There isn't a known solution to tokenizing the English language right now, so it's important to consider the strengths and weaknesses of your tokenization model.
 
 ## What is Stemming?
