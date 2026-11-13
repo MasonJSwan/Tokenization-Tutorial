@@ -6,4 +6,4 @@ Let's take a large step back from the world of programming and think about langu
 
 > ![image](/images/dictionary.png)
 >
-> *This dictionary has an entry for the word "muscle", but no separate entries for "muscle__s__", "muscle__d__", or "muscl__ing__"*
+> *This dictionary has an entry for the word **muscle**, but no separate entries for **muscle</ins>s</ins>**, **muscle<ins>d</ins>**, or **muscl<ins>ing</ins>**.*
