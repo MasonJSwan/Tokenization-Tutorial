@@ -3,14 +3,14 @@
 
 ## What is Tokenization
 When reading natural language into a computer program, it immediately becomes necessary to identify the boundaries between words. The simple text—"the boy kicked the ball"—can be split into into "the" "boy" "kicked" "the" "ball" by choosing to use space as a delimiter.
-```python
-alep = "the boy kicked the ball".split(" ")
-alep
-```
-```python
-# output
-['the', 'boy', 'kicked', 'the', 'ball']
-```
+> ```python
+> alep = "the boy kicked the ball".split(" ")
+> alep
+> ```
+> ```python
+> # output
+> ['the', 'boy', 'kicked', 'the', 'ball']
+> ```
 This is effective for cases where all of your text is separated by spaces, with no other punctuation, and where capitalization matters. We can see the frequency of each word using some form of counter:
 > ```python
 > from collections import Counter
@@ -34,16 +34,16 @@ Unfortunately, this simple approach does not work in more complicated examples
 > ```
 
 
-```python
-Counter(bet)
-```
-```python
-# output
-Counter({'it': 3, 'or': 2, 'Yes': 1, 'no': 1, "isn't": 1, 'null;': 1, 'yes': 1,
-         'is;': 1, 'no,': 1, 'I': 1, "don't": 1, 'know\nYes': 1, 'no?': 1,
-         "Isn't": 1, 'a': 1, 'silly': 1, 'question?': 1, 'Ask': 1,
-         'anyway,': 1, "'cause": 1})
-```
+> ```python
+> Counter(bet)
+> ```
+> ```python
+> # output
+> Counter({'it': 3, 'or': 2, 'Yes': 1, 'no': 1, "isn't": 1, 'null;': 1, 'yes': 1,
+>          'is;': 1, 'no,': 1, 'I': 1, "don't": 1, 'know\nYes': 1, 'no?': 1,
+>          "Isn't": 1, 'a': 1, 'silly': 1, 'question?': 1, 'Ask': 1,
+>          'anyway,': 1, "'cause": 1})
+> ```
 The counter is differentiating between `Yes` and `yes`, and it's not separating `know` and `yes` in `know\nYes`. It's also creating different counts for `no`, `no,` and `no?`.
 
 We can force the text to be all uppercase or lowercase, and we could add more separators, but this quickly becomes complicated. 
@@ -60,50 +60,49 @@ Typically, an apostrophe character is used in computer text as either a single q
 Thankfully, computational linguists have created tools for assisting with these problems. NLTK contains various tokenizers that follow different philosophies. 
 
 As an example, here's how `ToktokTokenizer` performs on last example sentence:
-```python
-# Natural Language processing tools
-import nltk
-from nltk.tokenize.toktok import ToktokTokenizer
-# Data structure for easy counting
-from collections import Counter
-
-giml = "He said 'don't don that t-shirt' to Don---who was doing dishes."
-
-lower_giml = giml.lower()
-
-tokenizer = ToktokTokenizer()
-tokenized = tokenizer.tokenize(lower_giml)
-
-tokenized
-```
-```python
-# output
-['he', 'said', "'", 'don', "'", 't', 'don', 'that', 't-shirt', "'", 'to',
- 'don', '---', 'who', 'was', 'doing', 'dishes', '.']
-```
+> ```python
+> # Natural Language processing tools
+> import nltk
+> from nltk.tokenize.toktok import ToktokTokenizer
+> # Data structure for easy counting
+> from collections import Counter
+> 
+> giml = "He said 'don't don that t-shirt' to Don---who was doing dishes."
+> 
+> lower_giml = giml.lower()
+> 
+> tokenizer = ToktokTokenizer()
+> tokenized = tokenizer.tokenize(lower_giml)
+> 
+> tokenized
+> ```
+> ```python
+> # output
+> ['he', 'said', "'", 'don', "'", 't', 'don', 'that', 't-shirt', "'", 'to',
+>  'don', '---', 'who', 'was', 'doing', 'dishes', '.']
+> ```
 Now with `TreebankWordTokenizer`:
-```python
-# output
-# Natural Language processing tools
-import nltk
-from nltk.tokenize.treebank import TreebankWordTokenizer
-# Data structure for easy counting
-from collections import Counter
-
-giml = "He said 'don't don that t-shirt' to Don---who was doing dishes."
-
-lower_giml = giml.lower()
-
-tokenizer = TreebankWordTokenizer()
-tokenized = tokenizer.tokenize(lower_giml)
-
-tokenized
-```
-```python
-# output
-['he', 'said', "'do", "n't", 'don', 'that', 't-shirt', "'", 'to', 'don', '--',
- '-who', 'was', 'doing', 'dishes', '.']
-```
+> ```python
+> # Natural Language processing tools
+> import nltk
+> from nltk.tokenize.treebank import TreebankWordTokenizer
+> # Data structure for easy counting
+> from collections import Counter
+> 
+> giml = "He said 'don't don that t-shirt' to Don---who was doing dishes."
+> 
+> lower_giml = giml.lower()
+> 
+> tokenizer = TreebankWordTokenizer()
+> tokenized = tokenizer.tokenize(lower_giml)
+> 
+> tokenized
+> ```
+> ```python
+> # output
+> ['he', 'said', "'do", "n't", 'don', 'that', 't-shirt', "'", 'to', 'don', '--',
+>  '-who', 'was', 'doing', 'dishes', '.']
+> ```
 
 These give different results, but that's okay. 
 - Toktok does a better job at splitting up the punctuation, but `don't` splits into `don` & `t`.
