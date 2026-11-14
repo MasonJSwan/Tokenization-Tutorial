@@ -120,8 +120,8 @@ This helps the dictionary stay smaller (it doesn't need every single inflection 
 
 We can use this in our code by using stemmers.
 
-### How to use a Stemmer
-It's easier to see the effectiveness of stemming in action with a significantly larger example than the song lyrics or short sentences I've been using so far. So I will be loading my favorite book into Python, and using regular expressions to clean it up
+### Setting up to use a stemmer
+It's easier to see the effectiveness of stemming in action with a significantly larger example than the song lyrics or short sentences I've been using so far. So I will be loading my favorite book into Python, and using regular expressions to clean it up.
 
 > ```python
 > # Regular expressions, used to trim string
@@ -163,10 +163,73 @@ text_frank = nltk.Text(tokens)
 To show off what exactly we can do now, let's generate a plot of every time words related to *wretch* or *misery* come up in the text:
 > ```python
 > import pylab
-> 
-> text_frank.dispersion_plot(['wretch', 'wretched', 'wretchedness', 'wretchedly', 'misery', 'miseries', 'miserable', 'miserably', 'commiserate'])
+>
+> dalet = ['wretch', 'wretched', 'wretchedness', 'wretchedly', 'misery', 'miseries', 'miserable', 'miserably', 'commiserate']
+> text_frank.dispersion_plot(dalet)
 > ```
 > ![image](/images/unstemmed_disp.png)
+
+It would be nice if we could just group those words together. Let's try using a stemmer to reduce the words to stems.
+
+### Using a stemmer
+
+First up, let's try using LancasterStemmer on our list of tokens
+> ```python
+> from nltk.stem.lancaster import LancasterStemmer
+> 
+> stemmer = LancasterStemmer()
+> [(tok, stemmer.stem(tok)) for tok in dalet]
+> ```
+> ```python
+> # output
+> [('wretch', 'wretch'),
+>  ('wretched', 'wretch'),
+>  ('wretchedness', 'wretch'),
+>  ('wretchedly', 'wretch'),
+>  ('misery', 'misery'),
+>  ('miseries', 'misery'),
+>  ('miserable', 'mis'),
+>  ('miserably', 'mis'),
+>  ('commiserate', 'com')]
+> ```
+This stemmer has reduced all of the *wretched* words into the `wretch` stem, but the *miserable* words are spread across `misery`, `mis`, and `com`. 
+
+We have to weigh whether or not we want to use this stemmer now. It's really unfortunate that *miserable* got reduced into `mis`, and *commiserate* into `com`. Your mileage may vary with stemming, so let's give this one a try on our whole book and see how that affects things.
+
+> ```python
+> lanc_stemmed_tokens = [stemmer.stem(tok) for tok in tokens]
+> lanc_stemmed_tokens[15250:15278]
+> ```
+> ```python
+> # Output
+> ['how', 'can', 'i', 'describ', 'my', 'emot', 'at', 'thi', 
+>  'catastroph', ',', 'or', 'how', 'delin', 'the', 'wretch', 'whom', 
+>  'with', 'such', 'infinit', 'pain', 'and', 'car', 'i', 'had', 
+>  'endeavo', 'to', 'form', '?']
+> ```
+
+This doesn't look too bad! Let's generate a distribution plot for the stems we produced.
+
+> ```python
+> lanc_stemmed_text_frank = nltk.Text(lanc_stemmed_tokens)
+> lanc_stemmed_text_frank.dispersion_plot(['wretch', 'misery', 'mis', 'com'])
+> ```
+> ![image](/images/lancstemmed_disp.png)
+
+> ```python
+> len(lanc_stemmed_text_frank.vocab()), len(text_frank.vocab())
+> ```
+> ```python
+> #output
+> (4000, 6826)
+> ```
+
+At a glance, we can see that the stem `wretch` does a great job at uniting its related words. `misery` seems good enough as well. Overall `mis` seems fine, though we'd better be careful because it might have too much since it's so heavily reduced.
+
+But `com` is clearly grabbing far more words than just *commiserate*... This stemmer does a great job at reducing the vocabulary of our book (it decreased the book's number of unique tokens from 6826 to 4000), but it overdid it in my opinion.
+
+For a more thorough approach to tackling this problem, we should look at Lemmatization.
+
 ## What is Lemmatization?
 Let's take a large step back from the world of programming and think about language. Grab a dictionary, and you'll find that there's usually one entry that unites all of the forms of a word
 
