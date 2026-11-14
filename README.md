@@ -231,10 +231,76 @@ But `com` is clearly grabbing far more words than just *commiserate*... This ste
 For a more thorough approach to tackling this problem, we should look at Lemmatization.
 
 ## What is Lemmatization?
-Let's take a large step back from the world of programming and think about language. Grab a dictionary, and you'll find that there's usually one entry that unites all of the forms of a word
+Let's look at that dictionary entry again.
+> ![image](/images/dictionary.png)
 
+*Muscle* is a verb, but it's also a noun; and *muscled* can be a verb or an adjective. We can also use the noun form of muscle as an adjective, like when we differentiate a *<ins>muscle</ins> shirt* from a regular old *shirt*.
 
+Should we consider the words *muscle* (noun), *muscle* (verb), and *muscle* (adj) to be only one word?
 
-The group of words that an entry unites is called a **lexeme**, and the word chosen for that entry is called the **lemma**. In the above dictionary entry, *muscle* is the lemma for the lexeme which includes the forms muscles, muscled, muscling.
+In truth, dictionaries do not contain stems. The group of words that a dictionary entry unites is called a **lexeme**, and the word chosen for that entry is called the **lemma**. In the above dictionary entry, *muscle* (verb) is the lemma for the lexeme which includes the verb forms of muscles, muscled, and muscling. But there are also entries for the noun and adjectival forms.
 
-If you're familiar with the English language, you'll know that not all
+Lemmatization takes the part of speech into account.
+
+We'll need our tokens, and to have the part of speech for each token, which we can get with `nltk.pos_tag(tokens)`.
+> ```python
+> tagged_tokens = nltk.pos_tag(tokens)
+> tagged_tokens[:3]
+> ```
+> ```python
+> # output
+> [('frankenstein', 'NN'), (';', ':'), ('or', 'CC')]
+> ```
+`pos_tag` isn't perfect, but there really isn't a way to perfectly compute parts of speech yet.
+
+We want to use WordNetLemmatizer, but it requires that the parts of speech be either `'n'` for noun, `'v'` for verbs, `'a'` for adjectives, and `'r'` for adverbs. So let's also create a function to convert our tags to fit these standards.
+> ```python
+> def pos_format(tag : str):
+>     if tag.startswith('NN'):
+>         return 'n'
+>     if tag.startswith('V'):
+>         return 'v'
+>     if tag.startswith('JJ'):
+>         return 'a'
+>     if tag.startswith('RB'):
+>         return 'r'
+>     return 'n'
+> ```
+
+Now we can try lemmatizing our tokens
+> ```python
+> from nltk.stem.wordnet import WordNetLemmatizer
+> 
+> lemmatizer = WordNetLemmatizer()
+> lemmed_tokens = [lemmatizer.lemmatize(tok, pos_format(pos)) 
+>                  for tok, pos in tagged_tokens]
+> 
+> lemmed_tokens[15250:15278]
+> ```
+> ```python
+> # output
+> ['how', 'can', 'i', 'describe', 'my', 'emotion', 'at', 'this', 
+>  'catastrophe', ',', 'or', 'how', 'delineate', 'the', 'wretch', 'whom', 
+>  'with', 'such', 'infinite', 'pain', 'and', 'care', 'i', 'have', 
+>  'endeavour', 'to', 'form', '?']
+> ```
+
+This looks very similar to the unlemmatized and unstemmed passage, so let me highlight the changes
+> how can i describe my emotion~~s~~ at this catastrophe, or how delineate the
+wretch whom with such infinite pain~~s~~ and care i ha~~d~~**ve** endeavour~~ed~~ to form?
+
+*emotions* and *pain* were made singular, and *had* and *endeavoured* were made present tense.
+
+Here's what lemmatizing a larger passage looks like:
+> #### Unlemmatized:
+> his jaws opened , and he muttered some inarticulate sounds , while a grin wrinkled his cheeks .
+>
+> he might have spoken , but i did not hear ; one hand was stretched out , seemingly to detain me , but i escaped , and rushed down stairs .
+>
+> i took refuge in the court-yard belonging to the house which i inhabited ; where i remained during the rest of the night , walking up and down in the greatest agitation , listening attentively , catching and fearing each sound as if it were to announce the approach of the demoniacal corpse to which i had so miserably given life .
+> #### Lemmatized:
+> his jaw~~s~~ open~~ed~~ , and he mutter~~ed~~ some inarticulate sound~~s~~ , while a grin wrinkle~~d~~ his cheek~~s~~ .
+> 
+> he might have sp~~oken~~**eak** , but i d~~id~~**o** not hear ; one hand ~~was~~**be** stretch~~ed~~ out , seemingly to detain me , but i escape~~d~~ , and rush~~ed~~ down stairs .
+>
+> i t~~ook~~**ake** refuge in the court-yard belonging to the house which i inhabit~~ed~~ ; where i remain~~ed~~ during the rest of the night , walk~~ing~~ up and down in the great~~est~~ agitation , listen~~ing~~ attentively , catch~~ing~~ and fear~~ing~~ each sound a~~s~~ if it ~~were~~**be** to announce the approach of the demoniacal corpse to which i ha~~d~~**ve** so miserably give~~n~~ life .'
