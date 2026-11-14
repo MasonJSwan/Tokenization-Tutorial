@@ -1,6 +1,12 @@
 # Text Preprocessing in Natural Language Processing
 > **Author: Mason Swanson**
 
+Natural language processing hit a boom in popularity in the recent decades. With that popularity comes increased demand for those who understand how to program natural language processing applications. Beyond that, it's actually kinda fun to do some light text analysis on your home computer. 
+
+But how do you get your text ready to be analyzed for a computer? You need to perform preprocessing.
+
+This article will cover three parts of preprocessing in NLP: Tokenization, Stemming, and Lemmatization.
+
 ## What is Tokenization
 When reading natural language into a computer program, it immediately becomes necessary to identify the boundaries between words. The simple text—"the boy kicked the ball"—can be split into into "the" "boy" "kicked" "the" "ball" by choosing to use space as a delimiter.
 > ```python
@@ -226,9 +232,9 @@ This doesn't look too bad! Let's generate a distribution plot for the stems we p
 
 At a glance, we can see that the stem `wretch` does a great job at uniting its related words. `misery` seems good enough as well. Overall `mis` seems fine, though we'd better be careful because it might have too much since it's so heavily reduced.
 
-But `com` is clearly grabbing far more words than just *commiserate*... This stemmer does a great job at reducing the vocabulary of our book (it decreased the book's number of unique tokens from 6826 to 4000), but it overdid it in my opinion.
+But `com` is clearly grabbing far more words than just *commiserate*... This stemmer does a great job at reducing the vocabulary of our book (it decreased the book's number of unique tokens from 6826 to 4000), but it overdid it in my opinion. Less zealous stemmers exist, and they're handy for keeping relevant words tied to the same stem, but stemming doesn't take the semantic meanings of words into account.
 
-For a more thorough approach to tackling this problem, we should look at Lemmatization.
+For a more careful approach to tackling this problem, we should look at Lemmatization.
 
 ## What is Lemmatization?
 Let's look at that dictionary entry again.
@@ -303,4 +309,17 @@ Here's what lemmatizing a larger passage looks like:
 > 
 > he might have sp~~oken~~**eak** , but i d~~id~~**o** not hear ; one hand ~~was~~**be** stretch~~ed~~ out , seemingly to detain me , but i escape~~d~~ , and rush~~ed~~ down stairs .
 >
-> i t~~ook~~**ake** refuge in the court-yard belonging to the house which i inhabit~~ed~~ ; where i remain~~ed~~ during the rest of the night , walk~~ing~~ up and down in the great~~est~~ agitation , listen~~ing~~ attentively , catch~~ing~~ and fear~~ing~~ each sound a~~s~~ if it ~~were~~**be** to announce the approach of the demoniacal corpse to which i ha~~d~~**ve** so miserably give~~n~~ life .'
+> i t~~ook~~**ake** refuge in the court-yard belonging to the house which i inhabit~~ed~~ ; where i remain~~ed~~ during the rest of the night , walk~~ing~~ up and down in the great~~est~~ agitation , listen~~ing~~ attentively , catch~~ing~~ and fear~~ing~~ each sound a~~s~~ if it ~~were~~**be** to announce the approach of the demoniacal corpse to which i ha~~d~~**ve** so miserably give~~n~~ life .
+
+Overall, this was able to reduce the tokens to lemmas far more fitting than the Lancaster stemmer could with stems. 
+
+I want to highlight a success and a failure. 
+
+**Success:** The function I wrote to convert parts of speech and the lemmatizer were able to recognize *down stairs* as two parts of a noun instead of thinking *stairs* was the plural of *stair*.
+
+**Failure**: My part of speech function defaulted to tagging tokens that weren't nouns, adjectives, verbs, or adverbs as if they were nouns. That cause the lemmatizer to convert `'as'` into `'a'`.
+
+## Conclusion
+I hope this walkthrough and explainer was helpful in covering why and how natural language text is preprocessed. Along with this article, I have provided a Jupyter Notebook with the code shown here. If you'd like to play with this more, I would highly recommend you download it and take a look.
+
+Take care everyone.
