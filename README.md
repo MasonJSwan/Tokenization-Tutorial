@@ -98,7 +98,7 @@ These give different results, but that's okay.
 - Toktok does a better job at splitting up the punctuation, but `don't` splits into `don` & `t`.
 - Treebank adds `'` to the first half of `don't`, but it also splits `don't` into `do` and `n't`, which maintains parts of the contraction as separate tokens.
 
-There isn't a known solution to tokenizing the English language right now, so it's important to consider the strengths and weaknesses of your tokenization model.
+There isn't a known solution to tokenizing the English language right now, so it's important to consider the strengths and weaknesses of your tokenization model. It's worth looking into different tokenizers. For the remainder of this walkthrough, I'll use `nltk.word_tokenize`, which is a modified version of TreebankWordTokenizer.
 
 ## What is Stemming?
 > *I... do not \*know\* the Sixth Circle as it is \*known\* to others. I fear that the Third Circle, the Fourth Circle and the Sixth Circle are more closely linked than many \*know.\* It is in that \*knowing\* that I have lost myself.*
@@ -116,10 +116,57 @@ Think about how dictionaries work
 > 
 > *This dictionary has an entry for the noun and verb **muscle**, but no separate entries for the verbs **muscle<ins>s</ins>**, **muscle<ins>d</ins>**, or **muscl<ins>ing</ins>**.*
 
+This helps the dictionary stay smaller (it doesn't need every single inflection of every single word) while remaining a useful tool to look up unfamiliar words.
 
+We can use this in our code by using stemmers.
 
-Tokenization is great, but is falls
+### How to use a Stemmer
+It's easier to see the effectiveness of stemming in action with a significantly larger example than the song lyrics or short sentences I've been using so far. So I will be loading my favorite book into Python, and using regular expressions to clean it up
 
+> ```python
+> # Regular expressions, used to trim string
+> import re
+> 
+> # load the file
+> file = open('./corpus/frankenstein.txt', mode='r', encoding="utf-8")
+> raw_text = file.read()
+> 
+> # Trim off the Project Gutenberg parts
+> #   The first 1224 characters are an intro added by Project Gutenberg.
+> #   The 409655th character is the beginning of an ending note by Project Gutenberg
+> raw_text = raw_text[1225:409655]
+> 
+> # Replace non-textual characters:
+> #  Remove _ and *
+> raw_text = re.sub(r'[_*]+', '', raw_text)
+> 
+> # Convert to lowercase
+> raw_text = raw_text.lower()
+> 
+> # Tokenize using nltk.word_tokenize
+> tokens = nltk.word_tokenize(raw_text, preserve_line=False)
+> 
+> tokens[15250:15278]
+> ```
+> ```python
+> #output
+> ['how', 'can', 'i', 'describe', 'my', 'emotions', 'at', 'this', 
+>  'catastrophe', ',', 'or', 'how', 'delineate', 'the', 'wretch', 'whom', 
+>  'with', 'such', 'infinite', 'pains', 'and', 'care', 'i', 'had', 
+>  'endeavoured', 'to', 'form', '?']
+> ```
+
+Great! Now let's use `nltk.Text` to convert these tokens into something we an easily analyze.
+```python
+text_frank = nltk.Text(tokens)
+```
+To show off what exactly we can do now, let's generate a plot of every time words related to *wretch* or *misery* come up in the text:
+> ```python
+> import pylab
+> 
+> text_frank.dispersion_plot(['wretch', 'wretched', 'wretchedness', 'wretchedly', 'misery', 'miseries', 'miserable', 'miserably', 'commiserate'])
+> ```
+> ![image](/images/unstemmed_disp.png)
 ## What is Lemmatization?
 Let's take a large step back from the world of programming and think about language. Grab a dictionary, and you'll find that there's usually one entry that unites all of the forms of a word
 
