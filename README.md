@@ -1,5 +1,6 @@
 # Text Preprocessing in Natural Language Processing
 > **Author: Mason Swanson**
+> About 9 minutes to read (2,279 words)
 
 Natural language processing hit a boom in popularity in recent decades. With that popularity comes increased demand for those who understand how to program natural language processing applications. Beyond that, it's actually kinda fun to do some light text analysis on your home computer. 
 
@@ -126,7 +127,7 @@ This helps the dictionary stay smaller (it doesn't need every single inflection 
 
 We can use this in our code by using stemmers.
 
-### Setting up to use a stemmer
+### Setting Up to Use a Stemmer
 It's easier to see the effectiveness of stemming in action with a significantly larger example than the song lyrics or short sentences I've been using so far. So I will be loading my favorite book into Python, and using regular expressions to clean it up.
 
 > ```python
@@ -177,7 +178,7 @@ To show off what exactly we can do now, let's generate a plot of every time word
 
 It would be nice if we could just group those words together. Let's try using a stemmer to reduce the words to stems.
 
-### Using a stemmer
+### Using a Stemmer
 
 First up, let's try using LancasterStemmer on our list of tokens
 > ```python
@@ -322,4 +323,4 @@ I want to highlight a success and a failure.
 ## Conclusion
 I hope this walkthrough and explainer was helpful in covering why and how natural language text is preprocessed. Along with this article, I have provided a Jupyter Notebook with the code shown here. If you'd like to play with this more, I would highly recommend you download it and take a look.
 
-Take care, everyone.
+Take care everyone.
